@@ -3,14 +3,14 @@
     <img class="position-absolute top-50 start-50 translate-middle" src="./assets/images/loading2.svg" alt="loading pic">
   </div>
   <header>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
-      <div class="container">
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <nav class="navbar navbar-expand-lg" :data-bs-theme="theme">
+      <div class="container position-relative">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" @click="openCollapse">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <div class="collapse navbar-collapse" id="navbarSupportedContent" ref="collapse">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
+              <li class="nav-item" @click="changeTheme">
                 <router-link class="nav-link" to="/">Home</router-link>
               </li>
               <li class="nav-item">
@@ -21,12 +21,12 @@
               </li>
             </ul>
           </div>
-          <button class="btn btn-primary" v-if="loginState" @click="signOut">Sign Out</button>
-          <router-link class="btn btn-primary" to="/login" v-else-if="!loginState && !isLogin">Login</router-link>
+          <button class="btn position-absolute top-0 end-0 me-3" :class="{'btn-secondary': theme==='light','btn-outline-primary': theme==='dark'}" v-if="loginState" @click="signOut">Sign Out</button>
+          <router-link class="btn position-absolute top-0 end-0 me-3" :class="{'btn-secondary': theme==='light','btn-outline-primary': theme==='dark'}" to="/login" v-else-if="!loginState && !isLogin">Login</router-link>
       </div>
     </nav>
   </header>
-  <router-view @emit-login="isLoginPage" @emit-toggleLogin="toggleLoginState" @emit-toggleLoading="toggleLoading" :login-state="loginState"></router-view>
+  <router-view @emit-login="isLoginPage" @emit-toggleLogin="toggleLoginState" @emit-toggleLoading="toggleLoading" :login-state="loginState" :default-theme="theme"></router-view>
 </template>
 <script>
 const apiUrl=import.meta.env.VITE_API;
@@ -36,6 +36,7 @@ export default {
       loginState: false,
       loading: false,
       isLogin: false,
+      theme: 'light',
     }
   },
   provide(){
@@ -43,9 +44,114 @@ export default {
       loginState: this.loginState,
     }
   },
+  watch: {
+    theme(){
+      return this.theme;
+    }
+  },
   methods: {
+    changeTheme(){
+      (() => {
+        'use strict'
+
+        const getStoredTheme = () => localStorage.getItem('theme')
+        const setStoredTheme = theme => localStorage.setItem('theme', theme)
+        
+        const getPreferredTheme = () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme) {
+            return storedTheme
+          }
+          if(this.theme==='light'){
+            this.theme='dark';
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+          }else{
+            this.theme='light';
+            return window.matchMedia('(prefers-color-scheme: light)').matches ? 'dark' : 'light'
+          }
+        }
+
+        const setTheme = theme => {
+          if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-bs-theme', 'dark')
+          } else {
+            document.documentElement.setAttribute('data-bs-theme', theme)
+          }
+        }
+
+        setTheme(getPreferredTheme())
+
+        const showActiveTheme = (theme, focus = false) => {
+          const themeSwitcher = document.querySelector('#bd-theme')
+
+          if (!themeSwitcher) {
+            return
+          }
+
+          const themeSwitcherText = document.querySelector('#bd-theme-text')
+          const activeThemeIcon = document.querySelector('.theme-icon-active use')
+          const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+          const svgOfActiveBtn = btnToActive.querySelector('svg use').getAttribute('href')
+
+          document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+            element.classList.remove('active')
+            element.setAttribute('aria-pressed', 'false')
+          })
+
+          btnToActive.classList.add('active')
+          btnToActive.setAttribute('aria-pressed', 'true')
+          activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+          const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`
+          themeSwitcher.setAttribute('aria-label', themeSwitcherLabel)
+
+          if (focus) {
+            themeSwitcher.focus()
+          }
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme !== 'light' && storedTheme !== 'dark') {
+            setTheme(getPreferredTheme())
+          }
+        })
+
+        window.addEventListener('DOMContentLoaded', () => {
+          showActiveTheme(getPreferredTheme())
+
+          document.querySelectorAll('[data-bs-theme-value]')
+            .forEach(toggle => {
+              toggle.addEventListener('click', () => {
+                const theme = toggle.getAttribute('data-bs-theme-value')
+                setStoredTheme(theme)
+                setTheme(theme)
+                showActiveTheme(theme, true)
+              })
+            })
+        })
+      })();
+    },
     toggleLoading(){
       this.loading=!this.loading;
+    },
+    openCollapse(){
+      if(this.$refs.collapse.className.includes('show')){
+          this.$refs.collapse.classList.remove('show');
+          this.$refs.collapse.classList.remove('collapse');
+          this.$refs.collapse.classList.add('collapsing');
+        setTimeout(() => {
+          this.$refs.collapse.classList.remove('collapsing');
+          this.$refs.collapse.classList.add('collapse');
+        },350);
+      }else{
+          this.$refs.collapse.classList.remove('collapse');
+          this.$refs.collapse.classList.add('collapsing');
+        setTimeout(() => {
+          this.$refs.collapse.classList.remove('collapsing');
+          this.$refs.collapse.classList.add('collapse');
+          this.$refs.collapse.classList.add('show');
+        },350);
+      }
     },
     toggleLoginState(boolean){
       this.loginState=boolean;
@@ -83,7 +189,7 @@ export default {
     },
   },
   created(){
-    
+    // this.changeTheme()
   },
 }
 </script>
