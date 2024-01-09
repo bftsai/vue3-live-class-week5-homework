@@ -24,7 +24,6 @@
 </template>
 <script>
 const apiUrl=import.meta.env.VITE_API;
-const apiPath=import.meta.env.VITE_PATH;
 // vee-validate 
 import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate';
 import { required, email,regex } from '@vee-validate/rules';
@@ -75,7 +74,8 @@ export default {
         this.user.username='';
         this.user.password='';
         this.$emit('emit-toggleLoading');
-        this.checkLogin();
+        await this.checkLogin();
+        this.$router.push('products');
       } catch (err) {
         console.log(err);
         const sweetConfig={
@@ -84,6 +84,16 @@ export default {
         }
         this.$swal(sweetConfig);
         this.$emit('emit-toggleLoading');
+      }
+    },
+    async logOut(){
+      try {
+        const token=document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,"$1",);
+        this.axios.defaults.headers.common['Authorization'] = token;
+        const result = (await this.axios.post(`${apiUrl}v2/logout`)).data;
+        console.log(result);
+      } catch (err) {
+        console.log(err);
       }
     },
     async checkLogin(){
@@ -92,21 +102,19 @@ export default {
         const token=document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,"$1",);
         this.axios.defaults.headers.common['Authorization'] = token;
         const result=(await this.axios.post(`${apiUrl}v2/api/user/check`)).data;
-        this.$emit('emit-toggleLogin');
+        if(result.success){
+          this.$emit('emit-toggleLogin',result.success);
+        }
         this.$emit('emit-toggleLoading');
       } catch (err) {
-        console.log(err);
+        this.$emit('emit-toggleLogin',err.response.data.success);
         this.$emit('emit-toggleLoading');
-        const sweetConfig={
-          icon: 'error',
-          title: err.response.data.message,
-        }
-        this.$swal(sweetConfig);
       }
     },
   },
   created(){
     this.$emit('emit-login');
+    this.checkLogin();
   },
   mounted(){
     

@@ -47,8 +47,8 @@ export default {
     toggleLoading(){
       this.loading=!this.loading;
     },
-    toggleLoginState(){
-      this.loginState=!this.loginState;
+    toggleLoginState(boolean){
+      this.loginState=boolean;
     },
     isLoginPage(){
       if(location.href.split('/#/')[1]==='login'){
@@ -61,6 +61,7 @@ export default {
       try {
         this.toggleLoading();
         const result=(await this.axios.post(`${apiUrl}v2/logout`)).data;
+        this.toggleLoading();
         const sweetConfig={
           icon: 'success',
           title: result.message,
@@ -68,8 +69,8 @@ export default {
         }
         this.$swal(sweetConfig);
         document.cookie=`hexToken=;max-age=0;`;
-        this.toggleLoading();
         this.toggleLoginState();
+        this.$router.push('/');
       } catch (err) {
         console.log(err);
         const sweetConfig={
