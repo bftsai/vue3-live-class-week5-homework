@@ -16,7 +16,7 @@
           <error-message class="invalid-feedback" name="Password"></error-message>
         </div>
         <div class="col-md-4">
-          <button class="btn btn-primary w-100" type="submit">Login</button>
+          <button class="btn w-100" :class="{'btn-secondary': defaultTheme==='light','btn-primary': defaultTheme==='dark'}" type="submit">Login</button>
         </div>
       </v-form>
     </div>
@@ -54,7 +54,7 @@ export default {
     VField: Field,
     ErrorMessage,
   },
-  props: ['loginState'],
+  props: ['loginState','defaultTheme'],
   methods: {
     onSubmit(){
       this.login();
@@ -115,6 +115,7 @@ export default {
   created(){
     this.$emit('emit-login');
     this.checkLogin();
+    console.log(this.defaultTheme);
   },
   mounted(){
     
