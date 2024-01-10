@@ -24,7 +24,7 @@
           <div class="position-absolute top-0 end-0 me-3
 position-absolute top-0 end-0 me-3 d-flex align-items-center">
             <div class="switchMode-box position-relative me-3">
-              <div class="btn btn-light position-absolute" @click="changeTheme"></div>
+              <img :src="themeIcon" alt="theme icon" class="switchBtn bg-light position-absolute" @click="changeTheme">
             </div>
             <button class="btn" :class="{'btn-secondary': theme==='light','btn-outline-primary': theme==='dark'}" v-if="loginState" @click="signOut">Sign Out</button>
             <router-link class="btn" :class="{'btn-secondary': theme==='light','btn-outline-primary': theme==='dark'}" to="/login" v-else-if="!loginState && !isLogin">Login</router-link>
@@ -36,6 +36,8 @@ position-absolute top-0 end-0 me-3 d-flex align-items-center">
 </template>
 <script>
 const apiUrl=import.meta.env.VITE_API;
+import sunIcon from '../src/assets/images/components/sun.png';
+import moonIcon from '../src/assets/images/components/moon.png';
 export default {
   data(){
     return {
@@ -43,6 +45,7 @@ export default {
       loading: false,
       isLogin: false,
       theme: 'light',
+      themeIcon: sunIcon,
     }
   },
   provide(){
@@ -52,7 +55,11 @@ export default {
   },
   watch: {
     theme(){
-      return this.theme;
+      if(this.themeIcon===sunIcon){
+        this.themeIcon = moonIcon
+      }else{
+        this.themeIcon = sunIcon;
+      }
     }
   },
   methods: {
@@ -220,9 +227,8 @@ export default {
   height: 25px;
   background-color: #969393e6;
   border-radius: 100px;
-  .btn{
+  .switchBtn{
     transition: all 0.8s ease;
-    background: url(../../assets/images/components/sun.png) center center no-repeat #fff;
     background-size: cover;
     box-shadow: 0px 0px 5px 1px rgb(3, 3, 3);
     width: 25px;
@@ -230,7 +236,6 @@ export default {
     border-radius: 100px;
   }
   .btnDark{
-    // background: url(../src/assets/images/components/moon.png) center center no-repeat #fff;
     background-size: cover;
     margin-left: 35px;
     transition: all 0.8s ease;
