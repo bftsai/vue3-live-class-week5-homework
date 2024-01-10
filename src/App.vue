@@ -222,7 +222,7 @@ export default {
   border-radius: 100px;
   .btn{
     transition: all 0.8s ease;
-    // background: url(../src/assets/images/components/sun.png) center center no-repeat #fff;
+    background: url(../../assets/images/components/sun.png) center center no-repeat #fff;
     background-size: cover;
     box-shadow: 0px 0px 5px 1px rgb(3, 3, 3);
     width: 25px;

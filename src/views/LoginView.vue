@@ -115,7 +115,6 @@ export default {
   created(){
     this.$emit('emit-login');
     this.checkLogin();
-    console.log(this.defaultTheme);
   },
   mounted(){
     
