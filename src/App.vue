@@ -1,6 +1,6 @@
 <template>
   <div id="loading" class="loadingBlock position-absolute z-1" v-if="loading">
-    <img class="position-absolute top-50 start-50 translate-middle" src="./assets/images/loading2.svg" alt="loading pic">
+    <img class="position-absolute top-50 start-50 translate-middle" src="./assets/images/components/loading2.svg" alt="loading pic">
   </div>
   <header>
     <nav class="navbar navbar-expand-lg" :data-bs-theme="theme">
@@ -10,7 +10,7 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent" ref="collapse">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item" @click="changeTheme">
+              <li class="nav-item">
                 <router-link class="nav-link" to="/">Home</router-link>
               </li>
               <li class="nav-item">
@@ -21,8 +21,14 @@
               </li>
             </ul>
           </div>
-          <button class="btn position-absolute top-0 end-0 me-3" :class="{'btn-secondary': theme==='light','btn-outline-primary': theme==='dark'}" v-if="loginState" @click="signOut">Sign Out</button>
-          <router-link class="btn position-absolute top-0 end-0 me-3" :class="{'btn-secondary': theme==='light','btn-outline-primary': theme==='dark'}" to="/login" v-else-if="!loginState && !isLogin">Login</router-link>
+          <div class="position-absolute top-0 end-0 me-3
+position-absolute top-0 end-0 me-3 d-flex align-items-center">
+            <div class="switchMode-box position-relative me-3">
+              <div class="btn btn-light position-absolute" @click="changeTheme"></div>
+            </div>
+            <button class="btn" :class="{'btn-secondary': theme==='light','btn-outline-primary': theme==='dark'}" v-if="loginState" @click="signOut">Sign Out</button>
+            <router-link class="btn" :class="{'btn-secondary': theme==='light','btn-outline-primary': theme==='dark'}" to="/login" v-else-if="!loginState && !isLogin">Login</router-link>
+          </div>
       </div>
     </nav>
   </header>
@@ -50,7 +56,14 @@ export default {
     }
   },
   methods: {
-    changeTheme(){
+    changeTheme(e){
+      if(!e.target.className.includes('btnDark')){
+        e.target.classList.add('btnDark');
+        e.target.closest('.switchMode-box').classList.add('bg-primary');
+      }else{
+        e.target.classList.remove('btnDark');
+        e.target.closest('.switchMode-box').classList.remove('bg-primary');
+      }
       (() => {
         'use strict'
 
@@ -200,5 +213,27 @@ export default {
   left: 0;
   right: 0;
   background-color: #0000005b;
+}
+.switchMode-box{
+  transition: all 0.4s ease;
+  width: 60px;
+  height: 25px;
+  background-color: #969393e6;
+  border-radius: 100px;
+  .btn{
+    transition: all 0.8s ease;
+    background: url(../src/assets/images/components/sun.png) center center no-repeat #fff;
+    background-size: cover;
+    box-shadow: 0px 0px 5px 1px rgb(3, 3, 3);
+    width: 25px;
+    height: 25px;
+    border-radius: 100px;
+  }
+  .btnDark{
+    background: url(../src/assets/images/components/moon.png) center center no-repeat #fff;
+    background-size: cover;
+    margin-left: 35px;
+    transition: all 0.8s ease;
+  }
 }
 </style>
