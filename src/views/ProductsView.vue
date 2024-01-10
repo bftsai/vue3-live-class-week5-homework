@@ -63,7 +63,7 @@ export default {
   props: ['defaultTheme'],
   watch: {
     defaultTheme(){
-      console.log(this.defaultTheme);
+      
     }
   },
   methods: {
@@ -82,11 +82,12 @@ export default {
         const result= (await this.axios.get(`${apiUrl}v2/api/${apiPath}/admin/products/all`)).data.products;
         this.productsNum=Object.keys(result);
       } catch (err) {
-        console.log(err);
+        console.log(err.response.data);
       }
     },
     async getProducts(page){
       try {
+        this.itemSelect={};
         this.product=[];
         this.$emit('emit-toggleLoading');
         const result = (await this.axios.get(`${apiUrl}v2/api/${apiPath}/admin/products?page=${page}`)).data;
