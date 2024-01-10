@@ -110,7 +110,6 @@ export default {
       }
     },
     checkProduct(product){
-      console.log(product);
       this.itemSelect=JSON.parse(JSON.stringify(product));
     },
     async postProduct(){
