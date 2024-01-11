@@ -5,7 +5,7 @@
   <header>
     <nav class="navbar navbar-expand-lg" :data-bs-theme="theme">
       <div class="container position-relative">
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" @click="openCollapse">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" @click="toggleCollapse">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent" ref="collapse">
@@ -38,6 +38,7 @@ position-absolute top-0 end-0 me-3 d-flex align-items-center">
 const apiUrl=import.meta.env.VITE_API;
 import sunIcon from '../src/assets/images/components/sun.png';
 import moonIcon from '../src/assets/images/components/moon.png';
+import Collapse from 'bootstrap/js/dist/collapse.js';
 export default {
   data(){
     return {
@@ -46,7 +47,11 @@ export default {
       isLogin: false,
       theme: 'light',
       themeIcon: sunIcon,
+      bsCollapse: {},
     }
+  },
+  component :{
+    Collapse,
   },
   provide(){
     return {
@@ -154,24 +159,14 @@ export default {
     toggleLoading(){
       this.loading=!this.loading;
     },
-    openCollapse(){
-      if(this.$refs.collapse.className.includes('show')){
-          this.$refs.collapse.classList.remove('show');
-          this.$refs.collapse.classList.remove('collapse');
-          this.$refs.collapse.classList.add('collapsing');
-        setTimeout(() => {
-          this.$refs.collapse.classList.remove('collapsing');
-          this.$refs.collapse.classList.add('collapse');
-        },350);
-      }else{
-          this.$refs.collapse.classList.remove('collapse');
-          this.$refs.collapse.classList.add('collapsing');
-        setTimeout(() => {
-          this.$refs.collapse.classList.remove('collapsing');
-          this.$refs.collapse.classList.add('collapse');
-          this.$refs.collapse.classList.add('show');
-        },350);
-      }
+    initBootstrapComponents(){
+      const bsCollapse = new Collapse(this.$refs.collapse, {
+        toggle: false
+      });
+      this.bsCollapse=bsCollapse;
+    },
+    toggleCollapse(){
+      this.bsCollapse.toggle();
     },
     toggleLoginState(boolean){
       this.loginState=boolean;
@@ -211,6 +206,9 @@ export default {
   created(){
     // this.changeTheme()
   },
+  mounted(){
+    this.initBootstrapComponents();
+  }
 }
 </script>
 <style lang="scss">
