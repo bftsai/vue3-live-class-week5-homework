@@ -1,7 +1,8 @@
 <template>
     <div class="container">
       <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-8">
+          <editModal ref="editModal" :editModal="itemSelect"></editModal>
           <h1>Products List</h1>
           <table class="table table-hover">
             <thead>
@@ -11,21 +12,26 @@
                 <th scope="col">售價</th>
                 <th scope="col">是否啟用</th>
                 <th scope="col">查看細節</th>
+                <th scope="col">編輯</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="item in products" :key="item.title" class="text-center">
-                <td>{{ item.title }}</td>
+                <td class="text-start">{{ item.title }}</td>
                 <td>{{ item.origin_price }}</td>
                 <td>{{ item.price }}</td>
                 <td :class="{'text-danger':textDanger(item.is_enabled),'text-light': textLight(item.is_enabled)}">{{ item.is_enabled? '啟用':'未啟用' }}</td>
-                <td><button type="button" class="btn w-100" :class="{'btn-secondary': defaultTheme==='light','btn-outline-primary': defaultTheme==='dark'}" @click="checkProduct(item)">查看細節</button></td>
+                <td><button type="button" class="btn w-100 p-1" :class="{'btn-secondary': defaultTheme==='light','btn-outline-primary': defaultTheme==='dark'}" @click="checkProduct(item)">查看細節</button></td>
+                <td>
+                  <button type="button" class="btn p-1" :class="{'btn-secondary': defaultTheme==='light','btn-outline-primary': defaultTheme==='dark'}" @click="editModal(item)">編輯</button>
+                  <button type="button" class="btn p-1 btn-outline-danger" :class="{'text-primary': defaultTheme==='dark'}">刪除</button>
+                </td>
               </tr>
             </tbody>
           </table>
           <pagination :pagination-obj="paginationObj" @emit-select-page="selectPage"></pagination>
         </div>
-        <div class="col-lg-6" v-if="itemSelect.id">
+        <div class="col-lg-4" v-if="itemSelect.id">
           <h2>Product</h2>
           <div class="card mb-3" :class="{'border-primary': defaultTheme==='dark'}">
             <img :src="itemSelect.imageUrl" class="card-img-top object-fit-contain" :alt="itemSelect.title" height="400">
@@ -48,6 +54,8 @@
 const apiUrl=import.meta.env.VITE_API;
 const apiPath=import.meta.env.VITE_PATH;
 import pagination from '../components/Pagination.vue';
+import editModal from '../components/EditModal.vue';
+
 export default {
   data(){
     return {
@@ -59,6 +67,7 @@ export default {
   },
   components: {
     pagination,
+    editModal,
   },
   props: ['defaultTheme'],
   watch: {
@@ -166,6 +175,10 @@ export default {
     },
     selectPage(page){
       this.getProducts(page)
+    },
+    editModal(product){
+      this.itemSelect = {... product};
+      this.$refs.editModal.showModal();
     },
   },
   created(){
