@@ -7,7 +7,7 @@
           <table class="table table-hover">
             <thead>
               <tr class="text-center">
-                <th scope="col">產品名稱</th>
+                <th class="w-50" scope="col">產品名稱</th>
                 <th scope="col">原價</th>
                 <th scope="col">售價</th>
                 <th scope="col">是否啟用</th>
@@ -17,13 +17,13 @@
             </thead>
             <tbody>
               <tr v-for="item in products" :key="item.title" class="text-center">
-                <td class="text-start">{{ item.title }}</td>
+                <td class="w-50 text-start">{{ item.title }}</td>
                 <td>{{ item.origin_price }}</td>
                 <td>{{ item.price }}</td>
                 <td :class="{'text-danger':textDanger(item.is_enabled),'text-light': textLight(item.is_enabled)}">{{ item.is_enabled? '啟用':'未啟用' }}</td>
                 <td><button type="button" class="btn w-100 p-1" :class="{'btn-secondary': defaultTheme==='light','btn-outline-primary': defaultTheme==='dark'}" @click="checkProduct(item)">查看細節</button></td>
-                <td>
-                  <button type="button" class="btn p-1" :class="{'btn-secondary': defaultTheme==='light','btn-outline-primary': defaultTheme==='dark'}" @click="editModal(item)">編輯</button>
+                <td colspan="2">
+                  <button type="button" class="btn p-1 me-3" :class="{'btn-secondary': defaultTheme==='light','btn-outline-primary': defaultTheme==='dark'}" @click="editModal(item)">編輯</button>
                   <button type="button" class="btn p-1 btn-outline-danger" :class="{'text-primary': defaultTheme==='dark'}">刪除</button>
                 </td>
               </tr>
@@ -54,7 +54,7 @@
 const apiUrl=import.meta.env.VITE_API;
 const apiPath=import.meta.env.VITE_PATH;
 import pagination from '../components/Pagination.vue';
-import editModal from '../components/EditModal.vue';
+import editModal from '../components/ProductModal.vue';
 
 export default {
   data(){
