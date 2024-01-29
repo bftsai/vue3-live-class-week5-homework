@@ -10,6 +10,9 @@ export default {
         },
         hideModal(){
             this.tempProduct = {};
+            this.imageUrl = '';
+            this.disabled = false;
+            this.fileData = '';
             this.$emit('emit-hideModal');
             this.modal.hide();
         }

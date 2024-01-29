@@ -2,8 +2,10 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-8">
-          <editModal ref="editModal" :editModal="itemSelect"></editModal>
+          <productModal ref="productModal" :product-modal="itemSelect" :emit-hide-modal="hideModal" @emit-get-products="getProducts" @emit-toggle-loading="toggleLoading"></productModal>
+          <deleteModal ref="deleteModal" :delete-modal="itemSelect" @emit-hideModal="hideModal" @emit-get-products="getProducts" @emit-toggle-loading="toggleLoading"></deleteModal>
           <h1>Products List</h1>
+          <button class="btn d-block ms-auto" :class="{'btn-secondary': defaultTheme==='light','btn-outline-primary': defaultTheme==='dark'}" @click="productModal">建立新產品</button>
           <table class="table table-hover">
             <thead>
               <tr class="text-center">
@@ -23,8 +25,8 @@
                 <td :class="{'text-danger':textDanger(item.is_enabled),'text-light': textLight(item.is_enabled)}">{{ item.is_enabled? '啟用':'未啟用' }}</td>
                 <td><button type="button" class="btn w-100 p-1" :class="{'btn-secondary': defaultTheme==='light','btn-outline-primary': defaultTheme==='dark'}" @click="checkProduct(item)">查看細節</button></td>
                 <td colspan="2">
-                  <button type="button" class="btn p-1 me-3" :class="{'btn-secondary': defaultTheme==='light','btn-outline-primary': defaultTheme==='dark'}" @click="editModal(item)">編輯</button>
-                  <button type="button" class="btn p-1 btn-outline-danger" :class="{'text-primary': defaultTheme==='dark'}">刪除</button>
+                  <button type="button" class="btn p-1 me-3" :class="{'btn-secondary': defaultTheme==='light','btn-outline-primary': defaultTheme==='dark'}" @click="productModal(item)">編輯</button>
+                  <button type="button" class="btn p-1 btn-outline-danger" :class="{'text-primary': defaultTheme==='dark'}" @click="deleteProduct(item)">刪除</button>
                 </td>
               </tr>
             </tbody>
@@ -47,14 +49,14 @@
           </div>
         </div>
       </div>
-      
     </div>
 </template>
 <script>
 const apiUrl=import.meta.env.VITE_API;
 const apiPath=import.meta.env.VITE_PATH;
 import pagination from '../components/Pagination.vue';
-import editModal from '../components/ProductModal.vue';
+import productModal from '../components/ProductModal.vue';
+import deleteModal from '../components/DeleteModal.vue';
 
 export default {
   data(){
@@ -67,7 +69,8 @@ export default {
   },
   components: {
     pagination,
-    editModal,
+    productModal,
+    deleteModal,
   },
   props: ['defaultTheme'],
   watch: {
@@ -94,7 +97,7 @@ export default {
         console.log(err.response.data);
       }
     },
-    async getProducts(page){
+    async getProducts(page = 1){
       try {
         this.itemSelect={};
         this.product=[];
@@ -176,12 +179,28 @@ export default {
     selectPage(page){
       this.getProducts(page)
     },
-    editModal(product){
-      this.itemSelect = {... product};
-      this.$refs.editModal.showModal();
+    productModal(product){
+      if(product.id){
+        this.itemSelect = {... product};
+      }else{
+        this.itemSelect = {
+          imagesUrl: [],
+        }
+      }
+      this.$refs.productModal.showModal();
     },
+    deleteProduct(product){
+      this.itemSelect = {...product};
+      this.$refs.deleteModal.showModal();
+    },
+    hideModal(){
+      this.itemSelect = {};
+    },
+    toggleLoading(){
+      this.$emit('emit-toggleLoading');
+    }
   },
-  created(){
+  mounted(){
     this.$emit('emit-login');
     this.checkLogin();
     // this.postProduct();

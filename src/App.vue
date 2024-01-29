@@ -1,5 +1,5 @@
 <template>
-  <div id="loading" class="loadingBlock position-absolute z-1" v-if="loading">
+  <div id="loading" class="loadingBlock position-absolute z-max" v-if="loading">
     <img class="position-absolute top-50 start-50 translate-middle" src="./assets/images/components/loading2.svg" alt="loading pic">
   </div>
   <header>
