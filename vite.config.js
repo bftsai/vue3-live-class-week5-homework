@@ -5,7 +5,7 @@ import { fileURLToPath, URL } from 'node:url';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/vue3-live-class-week4-homework/',
+  base: '/vue3-live-class-week5-homework/',
   plugins: [
     vue(),
     eslintPlugin({
