@@ -21,7 +21,7 @@ git commit -m 'deploy'
 # if you are deploying to https://bftsai.github.io
 # git push -f git@github.com:bftsai/bftsai.github.io.git main
 
-# if you are deploying to https://bftsai.github.io/vue3-live-class-week3-homework
-git push -f git@github.com:bftsai/vue3-live-class-week3-homework.git master:gh-pages
+# if you are deploying to https://bftsai.github.io/vue3-live-class-week4-homework
+git push -f git@github.com:bftsai/vue3-live-class-week4-homework.git master:gh-pages
 
 cd -

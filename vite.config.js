@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/vue3-live-class-week3-homework/',
+  base: '/vue3-live-class-week4-homework/',
   plugins: [
     vue(),
   ],
