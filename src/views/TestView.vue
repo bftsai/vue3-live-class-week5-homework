@@ -70,40 +70,38 @@
       </div>
     </div>
   </template>
-  <script>
-  import axios from 'axios';
-  const { VITE_API, VITE_PATH } = import.meta.env;
-  
-  export default {
-    data() {
-      return {
-        text: '測試',
-        products: [],
-      };
+<script>
+import axios from 'axios';
+
+const { VITE_API, VITE_PATH } = import.meta.env;
+
+export default {
+  data() {
+    return {
+      text: '測試',
+      products: [],
+    };
+  },
+  methods: {
+    getProducts() {
+      const url = `${VITE_API}v2/api/${VITE_PATH}/admin/products`;
+      const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1');
+      axios.defaults.headers.common.Authorization = token;
+      axios
+        .get(url)
+        .then((res) => {
+          this.products = res.data.products;
+        })
+        .catch((err) => {
+          // console.log(err);
+        });
     },
-    methods: {
-      getProducts() {
-        console.log('this.getProducts');
-        const url = `${VITE_API}v2/api/${VITE_PATH}/admin/products`;
-        const token=document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,"$1",);
-        axios.defaults.headers.common['Authorization'] = token;
-        axios
-          .get(url)
-          .then((res) => {
-            console.log(res.data.products);
-            this.products = res.data.products;
-            console.log('成功取得', this.products);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      },
-      showProductDetails() {
-        console.log('查看細節');
-      },
+    showProductDetails() {
+      // console.log('查看細節');
     },
-    mounted() {
-      this.getProducts();
-    },
-  };
-  </script>
+  },
+  mounted() {
+    this.getProducts();
+  },
+};
+</script>
