@@ -87,13 +87,9 @@ export default {
       const url = `${VITE_API}v2/api/${VITE_PATH}/admin/products`;
       const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1');
       axios.defaults.headers.common.Authorization = token;
-      axios
-        .get(url)
+      axios.get(url)
         .then((res) => {
           this.products = res.data.products;
-        })
-        .catch((err) => {
-          // console.log(err);
         });
     },
     showProductDetails() {
