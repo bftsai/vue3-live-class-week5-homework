@@ -1,6 +1,6 @@
 <template>
     <nav>
-        <ul class="pagination justify-content-center">
+        <ul class="pagination justify-content-center my-3">
             <li class="page-item" :class="{'disabled':!paginationObj.has_pre}">
                 <a class="page-link" :class="{'text-dark':!paginationObj.has_pre}"
                 @click="changePage">Previous</a>
@@ -20,6 +20,11 @@
 <script>
 export default {
   props: ['paginationObj'],
+  // watch: {
+  //   paginationObj() {
+  //     console.log(this.paginationObj);
+  //   },
+  // },
   methods: {
     changePage(e) {
       if (e.target.textContent === 'Next') {

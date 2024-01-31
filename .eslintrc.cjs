@@ -19,10 +19,10 @@ module.exports = {
         ],
         extensions: ['.js', '.vue'],
       },
-      'import/core-modules': [
-        'vite',
-        '@vitejs/plugin-vue',
-      ],
+      // 'import/core-modules': [
+      //   'vite',
+      //   '@vitejs/plugin-vue',
+      // ],
     },
   },
 };

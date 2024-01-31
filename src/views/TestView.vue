@@ -1,4 +1,7 @@
 <template>
+  <!-- <div class="vl-parent">
+        <Loading v-model:active="isLoading"></Loading>
+    </div> -->
     <div class="container">
       <div class="row py-3">
         <div class="col-md-6">
@@ -71,6 +74,8 @@
     </div>
   </template>
 <script>
+// import Loading from 'vue-loading-overlay';
+// import 'vue-loading-overlay/dist/css/index.css';
 import axios from 'axios';
 
 const { VITE_API, VITE_PATH } = import.meta.env;
@@ -80,8 +85,14 @@ export default {
     return {
       text: '測試',
       products: [],
+      isLoading: true,
     };
   },
+  // components: {
+  //   Loading,
+  // },
+  props: ['loginState', 'defaultTheme'],
+  emits: ['emitLogin', 'emitToggleLogin', 'emitToggleLoading'],
   methods: {
     getProducts() {
       const url = `${VITE_API}v2/api/${VITE_PATH}/admin/products`;
@@ -98,6 +109,8 @@ export default {
   },
   mounted() {
     this.getProducts();
+    this.$emit('emitLogin');
+    this.$emit('emitToggleLogin', true);
   },
 };
 </script>

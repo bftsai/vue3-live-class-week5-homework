@@ -77,6 +77,7 @@ export default {
     deleteModal,
   },
   props: ['defaultTheme'],
+  emits: ['emit-login', 'emit-toggleLogin', 'emit-toggleLoading'],
   methods: {
     textDanger(boolean) {
       if (!boolean && this.defaultTheme === 'light') {
@@ -132,12 +133,13 @@ export default {
         const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1');
         this.axios.defaults.headers.common.Authorization = token;
         const result = (await this.axios.post(`${apiUrl}v2/api/user/check`)).data;
+        this.$emit('emit-toggleLoading');
         if (result.success) {
           this.$emit('emit-toggleLogin', result.success);
           this.getProducts(1);
         }
-        this.$emit('emit-toggleLoading');
       } catch (err) {
+        this.$emit('emit-toggleLoading');
         this.$emit('emit-toggleLogin', err.response.data.success);
         const sweetConfig = {
           icon: 'error',
@@ -145,7 +147,6 @@ export default {
           timer: 1500,
         };
         this.$swal(sweetConfig);
-        this.$emit('emit-toggleLoading');
         if (!err.response.data.success) {
           this.$router.push('login');
         }

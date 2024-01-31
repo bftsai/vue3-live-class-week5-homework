@@ -31,25 +31,11 @@
 </template>
 <script>
 // vee-validate
-import {
-  Form, Field, ErrorMessage, defineRule, configure,
-} from 'vee-validate';
-import { required, email, regex } from '@vee-validate/rules';
-import { localize, setLocale } from '@vee-validate/i18n';
-// 下載語言
-import zhTW from '@vee-validate/i18n/dist/locale/zh_TW.json';
+import mixinValidate from '@/assets/js/mixins/mixinValidate';
+import mixinSwal from '@/assets/js/mixins/mixinSwal';
 
 const apiUrl = import.meta.env.VITE_API;
-defineRule('required', required);
-defineRule('email', email);
-defineRule('regex', regex);
 
-setLocale('zhTW');
-configure({
-  // Generates an English message locale generator
-  generateMessage: localize({ zhTW }),
-  validateOnInput: true, // 當輸入任何內容直接進行驗證
-});
 export default {
   data() {
     return {
@@ -59,11 +45,7 @@ export default {
       },
     };
   },
-  components: {
-    VForm: Form,
-    VField: Field,
-    ErrorMessage,
-  },
+  mixins: [mixinValidate, mixinSwal],
   props: ['loginState', 'defaultTheme'],
   methods: {
     onSubmit() {
@@ -73,26 +55,17 @@ export default {
       try {
         this.$emit('emit-toggleLoading');
         const result = (await this.axios.post(`${apiUrl}v2/admin/signin`, this.user)).data;
-        const sweetConfig = {
-          icon: 'success',
-          title: result.message,
-          timer: 1500,
-        };
-        this.$swal(sweetConfig);
+        this.showSuccess(result.message);
         const { token } = result;
         document.cookie = `hexToken=${token};expires=${new Date(result.expired)}`;
         this.user.username = '';
         this.user.password = '';
         this.$emit('emit-toggleLoading');
         await this.checkLogin();
-        this.$router.push('products');
+        this.$router.push('productsAdnin');
       } catch (err) {
         console.log(err);
-        const sweetConfig = {
-          icon: 'error',
-          title: err.response.data.message,
-        };
-        this.$swal(sweetConfig);
+        this.showError(err.response.data.message);
         this.$emit('emit-toggleLoading');
       }
     },

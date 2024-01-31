@@ -1,7 +1,9 @@
 <template>
-  <div id="loading" class="loadingBlock position-absolute z-max" v-if="loading">
-    <img class="position-absolute top-50 start-50 translate-middle"
-    src="./assets/images/components/loading2.svg" alt="loading pic">
+  <div class="vld-parent">
+        <loading-overlay :active="loading" :loader="'bars'"
+        :enforce-focus="true" :lock-scroll="true" :can-cancel="false"
+        :background-color="'#000012'" :opacity="0.3" :color="'#ffeba7'" :blur="'4px'"
+        :is-full-page="true"></loading-overlay>
   </div>
   <header>
     <nav class="navbar navbar-expand-lg" :data-bs-theme="theme">
@@ -17,7 +19,10 @@
                 <router-link class="nav-link" to="/">Home</router-link>
               </li>
               <li class="nav-item">
-                <router-link class="nav-link" to="/products">Product</router-link>
+                <router-link class="nav-link" to="/productsAdnin">Product(Admin)</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" to="/productsCustomer">Product(Customer)</router-link>
               </li>
               <li class="nav-item" v-if="!loginState">
                 <router-link class="nav-link" to="/login">Login</router-link>
@@ -26,6 +31,7 @@
           </div>
           <div class="position-absolute top-0 end-0 me-3
 position-absolute top-0 end-0 me-3 d-flex align-items-center">
+            <span class="me-3">{{ theme === 'dark'? '淺色模式':'深色模式' }}</span>
             <div class="switchMode-box position-relative me-3">
               <img :src="themeIcon" alt="theme icon"
               class="switchBtn bg-light position-absolute" @click="changeTheme">
@@ -41,9 +47,11 @@ position-absolute top-0 end-0 me-3 d-flex align-items-center">
       </div>
     </nav>
   </header>
-  <router-view @emit-login="isLoginPage" @emit-toggleLogin="toggleLoginState"
-  @emit-toggleLoading="toggleLoading" :login-state="loginState"
-  :default-theme="theme"></router-view>
+  <div class="pb-3">
+    <router-view @emit-login="isLoginPage" @emit-toggleLogin="toggleLoginState"
+    @emit-toggleLoading="toggleLoading" :login-state="loginState"
+    :default-theme="theme"></router-view>
+  </div>
 </template>
 <script>
 import Collapse from 'bootstrap/js/dist/collapse';
@@ -63,9 +71,6 @@ export default {
       bsCollapse: {},
     };
   },
-  // components: {
-  //   Collapse,
-  // },
   provide() {
     return {
       loginState: this.loginState,
@@ -243,5 +248,8 @@ export default {
     margin-left: 35px;
     transition: all 0.8s ease;
   }
+}
+textarea{
+  resize: none;
 }
 </style>
