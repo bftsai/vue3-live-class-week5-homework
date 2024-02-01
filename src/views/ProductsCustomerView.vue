@@ -2,7 +2,7 @@
     <div class="container">
         <h1>商品列表</h1>
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-12 col-lg-8">
               <p class="d-flex align-items-center"
               :class="{'text-primary': defaultTheme === 'dark'}">產品分類：
                 <select name="" id="" class="form-select w-auto" @change="changeCategory"
@@ -31,8 +31,8 @@
                       <p class="fs-lg-4">現在只要：${{ item.price }}</p>
                     </td>
                     <td>
-                        <div class="d-flex justify-content-center">
-                          <button class="btn btn-outline-secondary  me-3"
+                        <div class="d-flex justify-content-center flex-column flex-lg-row">
+                          <button class="btn btn-outline-secondary  me-lg-3"
                           @click="checkProduct(item, $event)" :data-num="key">查看更多</button>
                           <button class="btn btn-outline-danger"
                           @click="postCart(item.id)">加到購物車</button>
@@ -74,9 +74,9 @@
                         <td >{{ item.product.title }}</td>
                         <td>
                             <div class="d-flex justify-content-center">
-                                <input type="number" v-model="item.qty"
+                                <input type="number" class="w-50px" v-model="item.qty"
                             @change="putCart(item.id, item.qty)" min="1">
-                            &ensp;/ {{ item.product.unit }}
+                            <span>&ensp;/ {{ item.product.unit }}</span>
                             </div>
                         </td>
                         <td class="text-center">{{ item.product.origin_price }}</td>
@@ -379,12 +379,15 @@ export default {
 </script>
 <style lang="scss">
 img{
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
 }
 label.required::before{
   content: '* ';
   color: #ff0000;
+}
+.w-50px{
+  width: 50px;
 }
 @media (min-width: 768px) {
   img{
