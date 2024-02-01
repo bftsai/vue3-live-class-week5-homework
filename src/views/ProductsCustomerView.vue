@@ -74,7 +74,9 @@
                         <td >{{ item.product.title }}</td>
                         <td>
                             <div class="d-flex justify-content-center">
-                                <input type="number" class="w-50px" v-model="item.qty"
+                                <input type="number" class="w-50px"
+                                :class="{'text-danger': defaultTheme === 'dark'}"
+                                v-model="item.qty"
                             @change="putCart(item.id, item.qty)" min="1">
                             <span>&ensp;/ {{ item.product.unit }}</span>
                             </div>
@@ -389,7 +391,7 @@ label.required::before{
 .w-50px{
   width: 50px;
 }
-@media (min-width: 768px) {
+@media (min-width: 768px){
   img{
     width: 150px;
     height: 150px;
