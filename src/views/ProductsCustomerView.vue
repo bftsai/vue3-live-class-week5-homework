@@ -58,7 +58,7 @@
             :color="'#ff0000'" :weight="30" :height="30"
             :lock-scroll="true"/>
             <button class="btn btn-outline-danger d-block ms-auto w-auto mb-3"
-            @click="deleteCarts">清空購物車</button>
+            @click="deleteCarts" v-if="carts.length">清空購物車</button>
             <table class="table table-hover mb-0"
             :class="{'table-light': defaultTheme === 'light'}">
                 <thead>

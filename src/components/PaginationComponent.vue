@@ -20,11 +20,6 @@
 <script>
 export default {
   props: ['paginationObj'],
-  // watch: {
-  //   paginationObj() {
-  //     console.log(this.paginationObj);
-  //   },
-  // },
   methods: {
     changePage(e) {
       if (e.target.textContent === 'Next') {
@@ -34,6 +29,7 @@ export default {
       } else if (!e.target.closest('li').className.includes('active')) {
         this.$emit('emit-selectPage', e.target.textContent);
       }
+      window.scrollTo(0, 0);
     },
   },
 };
