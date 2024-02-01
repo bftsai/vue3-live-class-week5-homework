@@ -46,8 +46,12 @@ export default {
       // 可以取得載具寬度
       if (document.defaultView.innerWidth >= 992) {
         this.$refs.translate.setAttribute('style', `transform: translateY(calc(${this.clickItemNum} * 167px));`);
+      } else if (document.defaultView.innerWidth >= 768) {
+        this.$refs.translate.setAttribute('style', `transform: translateY(calc((${this.clickItemNum} - 9) * 175px)); background-color: #fff;padding: 10px; box-shadow: 0 0 10px 3px #000; margin-bottom: -900px;`);
+      } else if (document.defaultView.innerWidth >= 576) {
+        this.$refs.translate.setAttribute('style', `transform: translateY(calc((${this.clickItemNum} - 9) * 130px)); background-color: #fff;padding: 10px; box-shadow: 0 0 10px 3px #000; margin-bottom: -900px;`);
       } else {
-        this.$refs.translate.setAttribute('style', `transform: translateY(calc((${this.clickItemNum} - 9) * 167px)); background-color: #fff;padding: 10px; box-shadow: 0 0 10px 3px #000; margin-bottom: -900px;`);
+        this.$refs.translate.setAttribute('style', `transform: translateY(calc((${this.clickItemNum} - 9) * 180px)); background-color: #fff;padding: 10px; box-shadow: 0 0 10px 3px #000; margin-bottom: -900px;`);
       }
     },
     itemSelect() {
