@@ -2,7 +2,7 @@
     <div class="container">
         <h1>商品列表</h1>
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-lg-8">
               <p class="d-flex align-items-center"
               :class="{'text-primary': defaultTheme === 'dark'}">產品分類：
                 <select name="" id="" class="form-select w-auto" @change="changeCategory"
@@ -45,13 +45,14 @@
               @emit-selectPage="getProducts" :default-theme="defaultTheme"></PaginationComponent>
             </div>
             <ProductCard :item-select="itemSelect" :click-item-num="clickItemNum"
-            :default-theme="defaultTheme" v-show="itemSelect.id"></ProductCard>
+            :default-theme="defaultTheme" @emit-close-select-item="EmitCloseSelectItem"
+            v-show="itemSelect.id"></ProductCard>
         </div>
     </div>
-    <div class="py-5" :class="{'bg-light': defaultTheme === 'light'}">
+    <div class="py-5" :class="{'bg-sm-light': defaultTheme === 'light'}">
       <div class="container">
         <div class="row position-relative">
-          <div class="col-md-8">
+          <div class="col-lg-8">
             <loading class="pr-5" v-model:active="isLoading" :opacity="0.5"
             :is-full-page="false" :loader="'spinner'"
             :color="'#ff0000'" :weight="30" :height="30"
@@ -70,7 +71,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="item in carts" :key="item.id">
-                        <td>{{ item.product.title }}</td>
+                        <td >{{ item.product.title }}</td>
                         <td>
                             <div class="d-flex justify-content-center">
                                 <input type="number" v-model="item.qty"
@@ -108,7 +109,7 @@
     <div class="container py-5">
       <v-form class="row g-3" v-slot="{ errors }" @submit="postOrder"
       :class="{'text-primary': defaultTheme === 'dark'}">
-            <div class="col-md-8">
+            <div class="col-lg-8">
                 <label for="email" class="form-label required">
                   Email
                 </label>
@@ -117,33 +118,33 @@
                 rules="required|email" id="email" v-model="orderData.data.user.email"></v-field>
                 <error-message class="invalid-feedback" name="email"></error-message>
             </div>
-            <div class="col-md-8">
+            <div class="col-lg-8">
                 <label for="name" class="form-label required">收件人姓名</label>
                 <v-field type="text" name="name" class="form-control"
                 :class="{'is-invalid': errors.name}"
                 rules="required" id="name" v-model="orderData.data.user.name"></v-field>
                 <error-message class="invalid-feedback" name="name"></error-message>
             </div>
-            <div class="col-md-8">
+            <div class="col-lg-8">
                 <label for="phone" class="form-label required">收件人電話</label>
                 <v-field type="text" name="phone" class="form-control"
                 :class="{'is-invalid': errors.phone}"
                 :rules="isPhoneNum" id="phone" v-model="orderData.data.user.tel"></v-field>
                 <error-message class="invalid-feedback" name="phone"></error-message>
             </div>
-            <div class="col-md-8">
+            <div class="col-lg-8">
                 <label for="address" class="form-label required">收件人地址</label>
                 <v-field type="text" name="address" class="form-control"
                 :class="{'is-invalid': errors.address}"
                 rules="required" id="address" v-model="orderData.data.user.address"></v-field>
                 <error-message class="invalid-feedback" name="address"></error-message>
             </div>
-            <div class="col-md-8">
+            <div class="col-lg-8">
                 <label for="message" class="form-label">留言</label>
                 <textarea name="message" id="message"
                 class="form-control" cols="30" rows="5" v-model="orderData.data.message"></textarea>
             </div>
-            <div class="col-md-8 d-flex justify-content-end">
+            <div class="col-lg-8 d-flex justify-content-end">
                 <button class="btn btn-outline-danger" type="submit">送出訂單</button>
             </div>
       </v-form>
@@ -362,6 +363,10 @@ export default {
         console.log(err);
       }
     },
+    EmitCloseSelectItem() {
+      this.clickItemNum = '';
+      this.itemSelect = '';
+    },
   },
   mounted() {
     this.$emit('emitLogin');
@@ -374,11 +379,17 @@ export default {
 </script>
 <style lang="scss">
 img{
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
 }
 label.required::before{
   content: '* ';
   color: #ff0000;
+}
+@media (min-width: 768px) {
+  img{
+    width: 150px;
+    height: 150px;
+  }
 }
 </style>
