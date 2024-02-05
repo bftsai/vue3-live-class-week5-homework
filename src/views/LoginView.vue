@@ -31,8 +31,8 @@
 </template>
 <script>
 // vee-validate
-import mixinValidate from '@/assets/js/mixins/mixinValidate';
-import mixinSwal from '@/assets/js/mixins/mixinSwal';
+import mixinValidate from '@/mixins/mixinValidate';
+import mixinSwal from '@/mixins/mixinSwal';
 
 const apiUrl = import.meta.env.VITE_API;
 
@@ -105,4 +105,3 @@ export default {
 <style lang="scss">
 
 </style>
-@/mixins/mixinValidate@/mixins/mixinSwal@/mixins/mixinValidate@/mixins/mixinSwal
