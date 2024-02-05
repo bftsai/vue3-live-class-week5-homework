@@ -99,7 +99,8 @@
                                 <div class="w-100 d-flex flex-column">
                                     <v-field type="number" id="origin_price" class="form-control"
                                     :class="{'is-invalid': errors.Origin_price}" name="Origin_price"
-                                    v-model="tempProduct.origin_price" rules="required"></v-field>
+                                    v-model.number="tempProduct.origin_price"
+                                    min="0" rules="required"></v-field>
                                     <error-message class="invalid-feedback"
                                     name="Origin_price"></error-message>
                                 </div>
@@ -111,7 +112,8 @@
                                 <div class="w-100 d-flex flex-column">
                                     <v-field type="number" id="price" class="form-control"
                                     :class="{'is-invalid': errors.Price}" name="Price"
-                                    v-model="tempProduct.price" rules="required"></v-field>
+                                    v-model.number="tempProduct.price" min="0"
+                                    rules="required"></v-field>
                                     <error-message class="invalid-feedback"
                                     name="Price"></error-message>
                                 </div>
@@ -177,7 +179,7 @@ import {
 import { required } from '@vee-validate/rules';
 import { localize, setLocale } from '@vee-validate/i18n';
 import zhTW from '@vee-validate/i18n/dist/locale/zh_TW.json';
-import MixinModal from '../assets/js/mixins/mixinModal';
+import MixinModal from '../mixins/mixinModal';
 
 const apiUrl = import.meta.env.VITE_API;
 const apiPath = import.meta.env.VITE_PATH;

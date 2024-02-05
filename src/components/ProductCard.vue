@@ -5,7 +5,7 @@
             <button class="btn btn-outline-secondary" @click="closeSelectItem">X</button>
           </div>
           <div class="card mb-3" :class="{'border-primary': defaultTheme==='dark'}">
-            <img :src="img" class="card-img-top object-fit-cover"
+            <img :src="img || itemSelect.imageUrl" class="card-img-top object-fit-cover"
             :alt="itemSelect.title">
             <div class="card-body">
               <h5 class="card-title">{{ itemSelect.title }}<span class="badge ms-3"
@@ -20,11 +20,11 @@
           </div>
           <div class="d-flex justify-content-start justify-content-lg-around
           flex-wrap mb-3" ref="picArea">
-            <img :src="itemSelect.imageUrl" class="mx-3 mb-3 object-fit-cover"
+            <img :src="itemSelect.imageUrl" class="mx-3 mb-3 object-fit-cover w-100"
             :class="{'border-primary': defaultTheme === 'dark'}"
             :alt="itemSelect.title" @click="changeImg(itemSelect.imageUrl, $event)">
             <img :src="pic" :alt="'小圖' + key" v-for="(pic,key) in itemSelect.imagesUrl"
-            :key="'小圖' + key" class="mx-3 mb-3 object-fit-cover"
+            :key="'小圖' + key" class="mx-3 mb-3 object-fit-cover w-100"
             :class="{'border-primary': defaultTheme === 'dark'}"
             @click="changeImg(pic, $event)">
           </div>
@@ -53,9 +53,6 @@ export default {
       } else {
         this.$refs.translate.setAttribute('style', `transform: translateY(calc((${this.clickItemNum} - 9) * 180px)); background-color: #fff;padding: 10px; box-shadow: 0 0 10px 3px #000; margin-bottom: -900px;`);
       }
-    },
-    itemSelect() {
-      this.img = this.itemSelect.imageUrl;
     },
   },
   methods: {

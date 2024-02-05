@@ -9,7 +9,7 @@ import zhTw from '@vee-validate/i18n/dist/locale/zh_TW.json';
 defineRule('required', required);
 defineRule('email', email);
 defineRule('regex', regex);
-setLocale('zh_Tw');
+setLocale('zhTw');
 configure({
   // Generates an English message locale generator
   generateMessage: localize({ zhTw }),

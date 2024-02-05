@@ -32,9 +32,9 @@
                     </td>
                     <td>
                         <div class="d-flex justify-content-center flex-column flex-lg-row">
-                          <button class="btn btn-outline-secondary  me-lg-3"
+                          <button type="button" class="btn btn-outline-secondary  me-lg-3"
                           @click="checkProduct(item, $event)" :data-num="key">查看更多</button>
-                          <button class="btn btn-outline-danger"
+                          <button type="button" class="btn btn-outline-danger"
                           @click="postCart(item.id)">加到購物車</button>
                         </div>
                     </td>
@@ -57,7 +57,7 @@
             :is-full-page="false" :loader="'spinner'"
             :color="'#ff0000'" :weight="30" :height="30"
             :lock-scroll="true"/>
-            <button class="btn btn-outline-danger d-block ms-auto w-auto mb-3"
+            <button type="button" class="btn btn-outline-danger d-block ms-auto w-auto mb-3"
             @click="deleteCarts" v-if="carts.length">清空購物車</button>
             <table class="table table-hover mb-0"
             :class="{'table-light': defaultTheme === 'light'}">
@@ -77,7 +77,7 @@
                                 <input type="number" class="w-50px"
                                 :class="{'text-danger': defaultTheme === 'dark'}"
                                 v-model="item.qty"
-                            @change="putCart(item.id, item.qty)" min="1">
+                            @change="putCart(item.id, item.product_id, item.qty)" min="1">
                             <span>&ensp;/ {{ item.product.unit }}</span>
                             </div>
                         </td>
@@ -85,7 +85,7 @@
                         <td>
                             <div class="d-flex justify-content-center">
                                 <button type="button" class="btn btn-outline-danger"
-                                @click="deleteCart(item.id)">
+                                @click="deleteCart(item)">
                                 刪除</button>
                             </div>
                         </td>
@@ -107,6 +107,8 @@
           </div>
         </div>
       </div>
+      <DeleteModalCustomer ref="deleteModalCustomer"
+      :deleteModalCustomer="itemSelect" @emit-hideModal="hideDeleteModal"></DeleteModalCustomer>
     </div>
     <div class="container py-5">
       <v-form class="row g-3" v-slot="{ errors }" @submit="postOrder"
@@ -115,7 +117,7 @@
                 <label for="email" class="form-label required">
                   Email
                 </label>
-                <v-field type="text" name="email" class="form-control"
+                <v-field type="email" name="email" class="form-control"
                 :class="{'is-invalid': errors.email}"
                 rules="required|email" id="email" v-model="orderData.data.user.email"></v-field>
                 <error-message class="invalid-feedback" name="email"></error-message>
@@ -129,7 +131,7 @@
             </div>
             <div class="col-lg-8">
                 <label for="phone" class="form-label required">收件人電話</label>
-                <v-field type="text" name="phone" class="form-control"
+                <v-field type="tel" name="phone" class="form-control"
                 :class="{'is-invalid': errors.phone}"
                 :rules="isPhoneNum" id="phone" v-model="orderData.data.user.tel"></v-field>
                 <error-message class="invalid-feedback" name="phone"></error-message>
@@ -154,8 +156,9 @@
 </template>
 <script>
 import Loading from 'vue3-loading-overlay';
-import mixinValidation from '../assets/js/mixins/mixinValidate';
-import mixinSwal from '../assets/js/mixins/mixinSwal';
+import mixinValidation from '../mixins/mixinValidate';
+import mixinSwal from '../mixins/mixinSwal';
+import DeleteModalCustomer from '../components/DeleteModalCustomer.vue';
 
 import PaginationComponent from '../components/PaginationComponent.vue';
 import ProductCard from '../components/ProductCard.vue';
@@ -195,6 +198,7 @@ export default {
     PaginationComponent,
     ProductCard,
     Loading,
+    DeleteModalCustomer,
   },
   methods: {
     isPhoneNum(value) {
@@ -287,11 +291,11 @@ export default {
         console.log(err);
       }
     },
-    async putCart(id, num) {
+    async putCart(id, productId, num) {
       try {
         const obj = {
           data: {
-            product_id: id,
+            product_id: productId,
             qty: Number(num.toFixed(0)),
           },
         };
@@ -309,21 +313,13 @@ export default {
         console.log(err);
       }
     },
-    async deleteCart(id) {
-      try {
-        this.isLoading = true;
-        const result = (await this.axios.delete(`${apiUrl}/v2/api/${apiPath}/cart/${id}`)).data;
-        this.isLoading = false;
-        if (result.success) {
-          this.showSuccess(result.message);
-        } else {
-          this.showError(result.message);
-        }
-        this.getAllCarts();
-      } catch (err) {
-        console.log(err);
-        this.isLoading = false;
-      }
+    deleteCart(cart) {
+      this.itemSelect = JSON.parse(JSON.stringify(cart));
+      this.$refs.deleteModalCustomer.showModal();
+    },
+    hideDeleteModal() {
+      this.itemSelect = {};
+      this.getAllCarts();
     },
     async deleteCarts() {
       try {
@@ -359,6 +355,7 @@ export default {
         } else {
           this.showError(result.message);
         }
+        this.carts = {};
         this.getAllCarts();
       } catch (err) {
         this.$emit('emitToggleLoading');
@@ -379,7 +376,7 @@ export default {
   },
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 img{
   width: 80px;
   height: 80px;

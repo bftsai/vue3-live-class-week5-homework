@@ -3,7 +3,7 @@
     tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" ref="modal">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header bg-danger">
             <h5 class="modal-title fs-5" id="exampleModalLabel">Delete Product</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
             @click="hideModal"></button>
@@ -78,6 +78,7 @@
 </template>
 <script>
 import MixinModal from '@/mixins/mixinModal';
+import mixinSwal from '../mixins/mixinSwal';
 
 const apiUrl = import.meta.env.VITE_API;
 const apiPath = import.meta.env.VITE_PATH;
@@ -88,43 +89,32 @@ export default {
     };
   },
   props: {
-    deleteModal: {
+    deleteModalCustomer: {
       typeof: Object,
       default() { return {}; },
     },
   },
-  mixins: [MixinModal],
+  mixins: [MixinModal, mixinSwal],
   watch: {
-    deleteModal() {
-      this.tempProduct = { ...this.deleteModal };
+    deleteModalCustomer() {
+      this.tempProduct = { ...this.deleteModalCustomer.product };
     },
   },
   methods: {
     async deleteProduct() {
       try {
-        const { id } = this.tempProduct;
         this.$emit('emit-toggleLoading');
-        const result = (await this.axios.delete(`${apiUrl}/v2/api/${apiPath}/admin/product/${id}`)).data;
+        const result = (await this.axios.delete(`${apiUrl}/v2/api/${apiPath}/cart/${this.deleteModalCustomer.id}`)).data;
         this.$emit('emit-toggleLoading');
         if (result.success) {
-          const sweetConfig = {
-            icon: 'success',
-            title: result.message,
-            timer: 1500,
-          };
-          this.$swal(sweetConfig);
-          this.hideModal();
-          this.tempProduct = {};
-          this.$emit('emit-getProducts');
+          this.showSuccess(result.message);
         } else {
-          const sweetConfig = {
-            icon: 'error',
-            title: result.message,
-          };
-          this.$swal(sweetConfig);
+          this.showError(result.message);
         }
+        this.hideModal();
       } catch (err) {
         console.log(err);
+        this.isLoading = false;
       }
     },
   },

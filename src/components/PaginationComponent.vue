@@ -3,16 +3,16 @@
         <ul class="pagination justify-content-center my-3">
             <li class="page-item" :class="{'disabled':!paginationObj.has_pre}">
                 <a class="page-link" :class="{'text-dark':!paginationObj.has_pre}"
-                @click="changePage">Previous</a>
+                @click.prevent="changePage">Previous</a>
             </li>
             <li class="page-item" :class="{'active':paginationObj.current_page===key+1}"
             v-for="(item,key) in paginationObj.total_pages" :key="'key' + key">
                 <a class="page-link" :class="{'text-dark':paginationObj.current_page===key+1}"
-                @click="changePage">{{ key+1 }}</a>
+                @click.prevent="changePage">{{ key+1 }}</a>
             </li>
             <li class="page-item" :class="{'disabled':!paginationObj.has_next}">
                 <a class="page-link" :class="{'text-dark':!paginationObj.has_next}"
-                @click="changePage">Next</a>
+                @click.prevent="changePage">Next</a>
             </li>
         </ul>
     </nav>

@@ -105,3 +105,4 @@ export default {
 <style lang="scss">
 
 </style>
+@/mixins/mixinValidate@/mixins/mixinSwal@/mixins/mixinValidate@/mixins/mixinSwal
